@@ -1,0 +1,58 @@
+{
+	"name": "@porky-prince/protobuf",
+	"version": "0.0.0",
+	"description": "Protocol buffers for H5 game",
+	"keywords": [
+		"protobuf",
+		"protobufjs",
+		"egret",
+		"layaair",
+		"cocos"
+	],
+	"author": "PorkyKay",
+	"license": "MIT",
+	"bin": {
+		"porky-pb": "bin/cli.js"
+	},
+	"scripts": {
+		"lint:prettier": "prettier \"{**/*,*}.{js,ts,json,md}\" -l",
+		"lint:code": "eslint --cache \"{**/*,*}.{js,ts}\"",
+		"lint": "npm-run-all -l -p \"lint:**\"",
+		"pretest": "npm run lint",
+		"commitlint": "commitlint --from=master",
+		"start": "npm run build -- -w",
+		"build": "tsc src/main.ts --outDir dist",
+		"test": "jest --transform={\\\"^.+\\\\.tsx?$\\\":\\\"ts-jest\\\"}",
+		"pbjs": "pbjs",
+		"pbts": "pbts"
+	},
+	"dependencies": {
+		"commander": "^5.1.0",
+		"fs-extra": "^9.0.1",
+		"protobufjs": "6.8.4"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^9.0.1",
+		"@commitlint/config-conventional": "^9.0.1",
+		"@types/fs-extra": "^9.0.1",
+		"@types/jest": "^26.0.4",
+		"@typescript-eslint/eslint-plugin": "^3.6.0",
+		"@typescript-eslint/parser": "^3.6.0",
+		"eslint": "^7.4.0",
+		"eslint-config-prettier": "^6.11.0",
+		"eslint-config-xo": "^0.32.0",
+		"eslint-config-xo-typescript": "^0.31.0",
+		"eslint-plugin-import": "^2.22.0",
+		"eslint-plugin-prettier": "^3.1.4",
+		"husky": "^4.2.5",
+		"jest": "^26.1.0",
+		"lint-staged": "^10.2.11",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^2.0.5",
+		"ts-jest": "^26.1.1",
+		"typescript": "^3.9.6"
+	},
+	"repository": "https://github.com/porky-prince/protobuf.git",
+	"homepage": "https://github.com/porky-prince/protobuf#readme",
+	"bugs": "https://github.com/porky-prince/protobuf/issues"
+}

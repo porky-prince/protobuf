@@ -1,0 +1,6 @@
+coverage
+node_modules
+.gitee
+.github
+CHANGELOG.md
+libs
