@@ -2,7 +2,7 @@ import * as child_process from 'child_process';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as os from 'os';
-import merge from 'lodash-es/merge';
+import * as _ from 'lodash';
 
 async function shell(command: string, args: string[]) {
 	return new Promise<string>((resolve, reject) => {
@@ -23,26 +23,26 @@ type ProtobufConfig = {
 		'no-verify': boolean;
 		'no-convert': boolean;
 		'no-delimited': boolean;
+		'no-encode': boolean;
+		'no-decode': boolean;
 	};
 
 	sourceRoot: string;
 	outputFile: string;
 };
 
-let pbconfigContent: string = JSON.stringify(
-	{
-		options: {
-			'no-create': false,
-			'no-verify': false,
-			'no-convert': true,
-			'no-delimited': false,
-		},
-		sourceRoot: 'protofile',
-		outputFile: 'bundles/protobuf-bundles.js',
-	} as ProtobufConfig,
-	null,
-	'\t'
-);
+let pbconfigContent: ProtobufConfig = {
+	options: {
+		'no-create': false,
+		'no-verify': false,
+		'no-convert': true,
+		'no-delimited': false,
+		'no-encode': false,
+		'no-decode': false,
+	},
+	sourceRoot: 'protofile',
+	outputFile: 'bundles/protobuf-bundles.js',
+};
 
 async function generate(rootDir: string) {
 	const pbconfigPath = path.join(rootDir, 'pbconfig.json');
@@ -50,7 +50,7 @@ async function generate(rootDir: string) {
 		if (fs.existsSync(path.join(rootDir, 'protobuf'))) {
 			const pbconfigPath = path.join(rootDir, 'protobuf', 'pbconfig.json');
 			if (!fs.existsSync(pbconfigPath)) {
-				await fs.writeFile(pbconfigPath, pbconfigContent, 'utf-8');
+				await fs.outputJson(pbconfigPath, pbconfigContent);
 			}
 
 			await generate(path.join(rootDir, 'protobuf'));
@@ -63,11 +63,12 @@ async function generate(rootDir: string) {
 
 	const pbconfig: ProtobufConfig = await fs.readJson(path.join(rootDir, 'pbconfig.json'));
 	const tempfile = path.join(os.tmpdir(), 'pb-temp', 'temp.js');
-	await fs.mkdir(path.dirname(tempfile));
+	await fs.ensureDir(path.dirname(tempfile));
 	const output = path.join(rootDir, pbconfig.outputFile);
 	const dirname = path.dirname(output);
-	await fs.mkdir(dirname);
+	await fs.ensureDir(dirname);
 	const protoRoot = path.join(rootDir, pbconfig.sourceRoot);
+	await fs.ensureDir(protoRoot);
 	const fileList = await fs.readdir(protoRoot);
 	const protoList = fileList.filter(item => path.extname(item) === '.proto');
 	if (protoList.length === 0) {
@@ -110,6 +111,14 @@ async function generate(rootDir: string) {
 		args.unshift('--no-delimited');
 	}
 
+	if (pbconfig.options['no-encode']) {
+		args.unshift('--no-encode');
+	}
+
+	if (pbconfig.options['no-decode']) {
+		args.unshift('--no-decode');
+	}
+
 	await shell('npm run pbjs --', args);
 	let pbjsResult: string = await fs.readFile(tempfile, 'utf-8');
 	pbjsResult = 'var $protobuf = window.protobuf;\n$protobuf.roots.default=window;\n' + pbjsResult;
@@ -136,16 +145,15 @@ async function add(projectRoot: string) {
 		path.join(protobufRoot, 'index.d.ts'),
 		path.join(projectRoot, 'protobuf/library/protobuf.d.ts')
 	);
-	await fs.mkdir(path.join(projectRoot, 'protobuf/protofile'));
-	await fs.mkdir(path.join(projectRoot, 'protobuf/bundles'));
 
 	const configPath: string = path.join(projectRoot, 'protobuf/pbconfig.json');
 	if (fs.existsSync(configPath)) {
-		const json = await fs.readJson(configPath);
-		pbconfigContent = JSON.stringify(merge(JSON.parse(pbconfigContent), json), null, '\t');
+		pbconfigContent = _.merge(pbconfigContent, fs.readJsonSync(configPath));
 	}
 
-	await fs.writeFile(configPath, pbconfigContent, 'utf-8');
+	await fs.outputJson(configPath, pbconfigContent, {
+		spaces: 4,
+	});
 }
 
 export function run(command: string, projectRoot: string) {
