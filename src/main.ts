@@ -156,7 +156,7 @@ async function add(projectRoot: string) {
 	});
 }
 
-export default function run(command: string, projectRoot: string) {
+export function run(command: string, projectRoot: string) {
 	run_1(command, projectRoot).catch(e => console.log(e));
 }
 
