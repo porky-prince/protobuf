@@ -1,7 +1,3 @@
-[![npm][npm]][npm-url]
-[![node][node]][node-url]
-[![size][size]][size-url]
-
 # protobuf
 
 > Protocol buffers for H5 game
@@ -13,13 +9,13 @@
 npm:
 
 ```sh
-$ npm install --save protobuf
+$ npm install --save @porky-prince/protobuf
 ```
 
 yarn:
 
 ```sh
-$ yarn add protobuf
+$ yarn add @porky-prince/protobuf
 ```
 
 ### Global
@@ -27,13 +23,13 @@ $ yarn add protobuf
 npm:
 
 ```sh
-$ npm install -g protobuf
+$ npm install -g @porky-prince/protobuf
 ```
 
 yarn:
 
 ```sh
-$ yarn add global protobuf
+$ yarn add global @porky-prince/protobuf
 ```
 
 ## Usage
@@ -43,7 +39,7 @@ $ yarn add global protobuf
 #### Using es5 in node
 
 ```js
-const protobuf = require('protobuf');
+const protobuf = require('@porky-prince/protobuf');
 
 protobuf('args');
 ```
@@ -51,7 +47,7 @@ protobuf('args');
 #### Using es6 or typescript in node
 
 ```js
-import protobuf from 'protobuf';
+import protobuf from '@porky-prince/protobuf';
 
 protobuf('args');
 ```
@@ -83,10 +79,3 @@ $ protobuf -i inputPath -o outputDir
 ## License
 
 [MIT © PorkyKay](./LICENSE)
-
-[npm]: https://img.shields.io/npm/v/protobuf.svg
-[npm-url]: https://npmjs.com/package/protobuf
-[node]: https://img.shields.io/node/v/protobuf.svg
-[node-url]: https://nodejs.org
-[size]: https://packagephobia.now.sh/badge?p=protobuf
-[size-url]: https://packagephobia.now.sh/result?p=protobuf
