@@ -2,7 +2,6 @@
 'use strict';
 const program = require('commander');
 const pkg = require('../package.json');
-const pkgSafeName = require('./');
 
 program
 	.version(pkg.version, '-v, --version')
@@ -20,9 +19,7 @@ program
 		console.log('');
 		console.log(`${pkg.license} © ${pkg.author}`);
 	})
-	.action(options => {
-		pkgSafeName(options.input);
-	});
+	.action(options => {});
 
 program.parse(process.argv);
 
