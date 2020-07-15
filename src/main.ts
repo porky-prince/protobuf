@@ -119,11 +119,11 @@ async function generate(rootDir: string) {
 		args.unshift('--no-decode');
 	}
 
-	await shell('npm run pbjs --', args);
+	await shell('npx pbjs', args);
 	let pbjsResult: string = await fs.readFile(tempfile, 'utf-8');
 	pbjsResult = 'var $protobuf = window.protobuf;\n$protobuf.roots.default=window;\n' + pbjsResult;
 	await fs.writeFile(output, pbjsResult, 'utf-8');
-	await shell('npm run pbts --', ['--main', output, '-o', tempfile]);
+	await shell('npx pbts', ['--main', output, '-o', tempfile]);
 	let pbtsResult: string = await fs.readFile(tempfile, 'utf-8');
 	pbtsResult = pbtsResult
 		.replace(/\$protobuf/gi, 'protobuf')
@@ -156,9 +156,9 @@ async function add(projectRoot: string) {
 	});
 }
 
-export function run(command: string, projectRoot: string) {
-	run_1(command, projectRoot).catch(e => console.log(e));
-}
+module.exports = async function (command: string, projectRoot: string) {
+	await run_1(command, projectRoot).catch(e => console.log(e));
+};
 
 async function run_1(command: string, projectRoot: string) {
 	if (command === 'add') {
