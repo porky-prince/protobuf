@@ -3,5 +3,4 @@ const path = require('path');
 const { run } = require('../dist/main');
 const projectRoot = path.join(process.cwd(), '../../');
 
-console.log(run);
-// run('add', projectRoot);
+run('add', projectRoot);
