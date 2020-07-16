@@ -44,7 +44,7 @@ let pbconfigContent: ProtobufConfig = {
 	outputFile: 'bundles/protobuf-bundles.js',
 };
 
-async function generate(rootDir: string) {
+export async function generate(rootDir: string) {
 	const pbconfigPath = path.join(rootDir, 'pbconfig.json');
 	if (!fs.existsSync(pbconfigPath)) {
 		if (fs.existsSync(path.join(rootDir, 'protobuf'))) {
@@ -62,7 +62,7 @@ async function generate(rootDir: string) {
 	}
 
 	const pbconfig: ProtobufConfig = await fs.readJson(path.join(rootDir, 'pbconfig.json'));
-	const tempfile = path.join(os.tmpdir(), 'pb-temp', 'temp.js');
+	const tempfile = path.join(os.tmpdir(), 'porky-pb', 'temp.js');
 	await fs.ensureDir(path.dirname(tempfile));
 	const output = path.join(rootDir, pbconfig.outputFile);
 	const dirname = path.dirname(output);
@@ -133,7 +133,7 @@ async function generate(rootDir: string) {
 	await fs.remove(tempfile);
 }
 
-async function add(projectRoot: string) {
+export async function add(projectRoot: string) {
 	console.log('正在将 protobuf 源码拷贝至项目中...');
 	const protobufRoot = path.dirname(require.resolve('protobufjs'));
 
@@ -154,18 +154,4 @@ async function add(projectRoot: string) {
 	await fs.outputJson(configPath, pbconfigContent, {
 		spaces: 4,
 	});
-}
-
-module.exports = async function (command: string, projectRoot: string) {
-	await run_1(command, projectRoot).catch(e => console.log(e));
-};
-
-async function run_1(command: string, projectRoot: string) {
-	if (command === 'add') {
-		await add(projectRoot);
-	} else if (command === 'generate') {
-		await generate(projectRoot);
-	} else {
-		console.error('请输入命令: add / generate');
-	}
 }
