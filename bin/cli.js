@@ -5,6 +5,7 @@ const pkg = require('../package.json');
 const protobuf = require('../dist/main');
 
 program
+	.name('porky-pb')
 	.version(pkg.version, '-v, --version')
 	.description(pkg.description)
 	.usage('<command>')
