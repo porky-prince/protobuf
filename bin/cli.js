@@ -20,15 +20,11 @@ program
 program
 	.command('add <projectRoot>')
 	.description('add protobuf.js, protobuf.d.ts and pbconfig.json to your project')
-	.action(projectRoot => {
-		protobuf.add(projectRoot);
-	});
+	.action(protobuf.add);
 
 program
 	.command('generate <projectRoot>')
 	.description('generate bundle.js and bundle.d.ts to your project by proto files')
-	.action(projectRoot => {
-		protobuf.generate(projectRoot);
-	});
+	.action(protobuf.generate);
 
 program.parse(process.argv);
