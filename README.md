@@ -2,6 +2,15 @@
 
 > Protocol buffers for H5 game
 
+## Reference
+
+[@egret/protobuf](https://www.npmjs.com/package/@egret/protobuf)
+
+## Feature
+
+-   protobuf.js, protobuf.d.ts and pbconfig.json will be added to your project automatically after the package was installed
+-   support node >= 12
+
 ## Install
 
 ### Local
@@ -68,10 +77,6 @@ $ porky-pb generate you-project-root
                           by proto files
   help [command]          display help for command
 ```
-
-## Reference
-
-[@egret/protobuf](https://www.npmjs.com/package/@egret/protobuf)
 
 ## License
 

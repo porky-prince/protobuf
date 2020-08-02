@@ -1,6 +1,6 @@
 {
 	"name": "@porky-prince/protobuf",
-	"version": "0.0.5",
+	"version": "1.0.0",
 	"description": "Protocol buffers for H5 game",
 	"keywords": [
 		"protobuf",
@@ -13,6 +13,9 @@
 	"license": "MIT",
 	"publishConfig": {
 		"access": "public"
+	},
+	"engines": {
+		"node": ">=12"
 	},
 	"main": "dist/main.js",
 	"bin": {
