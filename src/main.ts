@@ -17,32 +17,23 @@ async function shell(command: string, args: string[]) {
 	});
 }
 
-type ProtobufConfig = {
-	options: {
-		'no-create': boolean;
-		'no-verify': boolean;
-		'no-convert': boolean;
-		'no-delimited': boolean;
-		'no-encode': boolean;
-		'no-decode': boolean;
-	};
-
-	sourceRoot: string;
-	outputFile: string;
-};
-
-let pbconfigContent: ProtobufConfig = {
+const pbconfigContent = {
 	options: {
 		'no-create': false,
+		'no-encode': false,
+		'no-decode': false,
 		'no-verify': false,
 		'no-convert': true,
 		'no-delimited': false,
-		'no-encode': false,
-		'no-decode': false,
+		'force-long': false,
+		'force-number': false,
+		'force-message': false,
 	},
 	sourceRoot: 'protofile',
 	outputFile: 'bundles/protobuf-bundles.js',
 };
+
+type ProtobufConfig = typeof pbconfigContent;
 
 export async function generate(rootDir: string) {
 	const pbconfigPath = path.join(rootDir, 'pbconfig.json');
@@ -95,29 +86,15 @@ export async function generate(rootDir: string) {
 		'-o',
 		tempfile
 	];
-	if (pbconfig.options['no-create']) {
-		args.unshift('--no-create');
-	}
-
-	if (pbconfig.options['no-verify']) {
-		args.unshift('--no-verify');
-	}
-
-	if (pbconfig.options['no-convert']) {
-		args.unshift('--no-convert');
-	}
-
-	if (pbconfig.options['no-delimited']) {
-		args.unshift('--no-delimited');
-	}
-
-	if (pbconfig.options['no-encode']) {
-		args.unshift('--no-encode');
-	}
-
-	if (pbconfig.options['no-decode']) {
-		args.unshift('--no-decode');
-	}
+	_.each(pbconfig.options, (value: boolean, key: string) => {
+		if (key in pbconfigContent.options) {
+			if (value) {
+				args.unshift('--' + key);
+			}
+		} else {
+			console.log('Unknown option:', key);
+		}
+	});
 
 	await shell('npx pbjs', args);
 	let pbjsResult: string = await fs.readFile(tempfile, 'utf-8');
@@ -147,11 +124,12 @@ export async function add(projectRoot: string) {
 	);
 
 	const configPath: string = path.join(projectRoot, 'protobuf/pbconfig.json');
+	let pbconfig: ProtobufConfig = _.clone(pbconfigContent);
 	if (fs.existsSync(configPath)) {
-		pbconfigContent = _.merge(pbconfigContent, fs.readJsonSync(configPath));
+		pbconfig = _.merge(pbconfig, fs.readJsonSync(configPath));
 	}
 
-	await fs.outputJson(configPath, pbconfigContent, {
+	await fs.outputJson(configPath, pbconfig, {
 		spaces: 4,
 	});
 }

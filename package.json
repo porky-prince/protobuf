@@ -1,6 +1,6 @@
 {
 	"name": "@porky-prince/protobuf",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Protocol buffers for H5 game",
 	"keywords": [
 		"protobuf",
