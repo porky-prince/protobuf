@@ -35,7 +35,7 @@ const pbconfigContent = {
 
 type ProtobufConfig = typeof pbconfigContent;
 
-export async function generate(rootDir: string) {
+export async function generate(rootDir: string): Promise<void> {
 	const pbconfigPath = path.join(rootDir, 'pbconfig.json');
 	if (!fs.existsSync(pbconfigPath)) {
 		if (fs.existsSync(path.join(rootDir, 'protobuf'))) {
@@ -110,18 +110,19 @@ export async function generate(rootDir: string) {
 	await fs.remove(tempfile);
 }
 
-export async function add(projectRoot: string) {
+export async function add(projectRoot: string, overwrite: boolean): Promise<void> {
 	console.log('正在将 protobuf 源码拷贝至项目中...');
 	const protobufRoot = path.dirname(require.resolve('protobufjs'));
 
-	await fs.copy(
-		path.join(protobufRoot, 'dist', 'protobuf.js'),
-		path.join(projectRoot, 'protobuf/library/protobuf.js')
-	);
-	await fs.copy(
-		path.join(protobufRoot, 'index.d.ts'),
-		path.join(projectRoot, 'protobuf/library/protobuf.d.ts')
-	);
+	const libJsPath: string = path.join(projectRoot, 'protobuf/library/protobuf.js');
+	const libDtsPath: string = path.join(projectRoot, 'protobuf/library/protobuf.d.ts');
+	if (overwrite || !fs.existsSync(libJsPath)) {
+		await fs.copy(path.join(protobufRoot, 'dist', 'protobuf.js'), libJsPath);
+	}
+
+	if (overwrite || !fs.existsSync(libDtsPath)) {
+		await fs.copy(path.join(protobufRoot, 'index.d.ts'), libDtsPath);
+	}
 
 	const configPath: string = path.join(projectRoot, 'protobuf/pbconfig.json');
 	let pbconfig: ProtobufConfig = _.clone(pbconfigContent);

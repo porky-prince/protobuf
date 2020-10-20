@@ -20,7 +20,10 @@ program
 program
 	.command('add <projectRoot>')
 	.description('add protobuf.js, protobuf.d.ts and pbconfig.json to your project')
-	.action(protobuf.add);
+	.option('-o, --overwrite [boolean]', 'overwrite if file exists', false)
+	.action((projectRoot, opt) => {
+		protobuf.add(projectRoot, opt.overwrite);
+	});
 
 program
 	.command('generate <projectRoot>')

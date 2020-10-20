@@ -49,7 +49,7 @@ $ yarn add global @porky-prince/protobuf
 const protobuf = require('@porky-prince/protobuf');
 
 async function run() {
-	await protobuf.add(projectRoot);
+	await protobuf.add(projectRoot, true);
 	await protobuf.generate(projectRoot);
 }
 ```
@@ -71,7 +71,7 @@ $ porky-pb generate you-project-root
 #### Command line options
 
 ```
-  add <projectRoot>       add protobuf.js, protobuf.d.ts and pbconfig.json to
+  add [options] <projectRoot>       add protobuf.js, protobuf.d.ts and pbconfig.json to
                           your project
   generate <projectRoot>  generate bundle.js and bundle.d.ts to your project
                           by proto files
